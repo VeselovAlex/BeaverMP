@@ -4,6 +4,7 @@
     android:layout_height="match_parent" 
     android:paddingTop="2dip"
     android:paddingBottom="3dip"
-    android:textColor="#9933CC">
+    android:textColor="#9933CC"
+    android:textSize="24sp" >
 
 </TextView>
