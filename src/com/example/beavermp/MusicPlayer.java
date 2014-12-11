@@ -1,12 +1,15 @@
 package com.example.beavermp;
 
 import java.io.File;
+import java.io.FileDescriptor;
 import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
 import android.media.AudioManager;
+import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
+import android.media.MediaPlayer.TrackInfo;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.net.Uri;
 import android.view.View;
@@ -36,7 +39,6 @@ public class MusicPlayer {
 
 	protected Context context;
 	protected MediaPlayer player = new MediaPlayer();
-	protected MediaPlayer bgPlayer = new MediaPlayer();//for conveyor, TODO add conveyor later
 	protected static String[] musicExt = {".mp3", ".flac"};
 	protected Button playBtn;
 	protected Button prevBtn;
@@ -46,6 +48,7 @@ public class MusicPlayer {
 	protected OnCompletionListener completePlayback = null;
 	protected PlayList playlist = new PlayList();
 	protected TextView timeElapsed;
+	protected TextView txt_name;
 
 	protected class PlayList {
 		private List<File> playlist = new ArrayList<File>();
@@ -112,7 +115,8 @@ public class MusicPlayer {
 		playProgress = (SeekBar) controls.findViewById(R.id.playProgressBar);
 		timer = (Chronometer) controls.findViewById(R.id.playbackTimer);
 		timeElapsed = (TextView) controls.findViewById(R.id.curTime);
-
+		txt_name = (TextView) controls.findViewById(R.id.txt_name);
+		
 		OnClickListener playBtnClicked = new OnClickListener() {
 
 			@Override
@@ -268,7 +272,17 @@ public class MusicPlayer {
 				player.setOnCompletionListener(completePlayback);
 
 			if (playProgress != null)
+			{
 				playProgress.setMax(player.getDuration());
+				playProgress.setProgress(0);
+			}
+			
+			if(txt_name != null) {
+				MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+				retriever.setDataSource(musicFile.getPath());
+				String title = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE);
+				txt_name.setText(title);
+			}
 			return true;
 		}
 		return false;
